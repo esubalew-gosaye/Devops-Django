@@ -1,13 +1,13 @@
 FROM python:3.10
+ENV PYTHONBUFFERED 1
+WORKDIR /django_web
 
-WORKDIR django_web
+COPY requirements.txt /django_web	
 
-COPY requirements.txt django_web	
+RUN pip3 install -r requirements.txt
 
-RUN pip install requirements.txt
+COPY . /django_web
 
-COPY . django_web
+EXPOSE 8001
 
-EXPOSE 8080
-
-CMD ["python", "manage.py", "runserver"]
+CMD ["python3", "manage.py", "runserver"]
