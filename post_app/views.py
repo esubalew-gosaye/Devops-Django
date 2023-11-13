@@ -12,8 +12,6 @@ from django.contrib import messages
 from django.http import QueryDict
 
 from django.template.loader import render_to_string
-from weasyprint import HTML
-import tempfile
 from django.db.models import Sum
 
 
@@ -37,16 +35,16 @@ def test(request):
 
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'inline; attachment; filename="report.pdf"'
-        response["Content-Transfer-Encoding"] = 'binary'
+        # response["Content-Transfer-Encoding"] = 'binary'
         html_string = render_to_string('post/report.html', {'posts': posts, 'total': 0})
-        html = HTML(string=html_string)
+        # html = HTML(string=html_string)
 
-        rs = html.write_pdf()
-        with tempfile.NamedTemporaryFile(delete=True) as output:
-            output.write(rs)
-            output.flush()
-            output.seek(0)
-            response.write(output.read())
+        # rs = html.write_pdf()
+        # with tempfile.NamedTemporaryFile(delete=True) as output:
+        #     output.write(rs)
+        #     output.flush()
+        #     output.seek(0)
+        #     response.write(output.read())
         return response
     context = {
         'time': 'weekly',
@@ -177,15 +175,15 @@ def counter_dashboard(request):
                 daily = Post.objects.filter(date_send__year=s[0], date_send__month=s[1], date_send__day=s[2])
                 response = HttpResponse(content_type='application/pdf')
                 response['Content-Disposition'] = 'attachment; filename="daily_report.pdf"'
-                response["Content-Transfer-Encoding"] = 'binary'
+                # response["Content-Transfer-Encoding"] = 'binary'
                 html_string = render_to_string('post/report.html', {'posts': daily})
-                html = HTML(string=html_string)
-                rs = html.write_pdf()
-                with tempfile.NamedTemporaryFile(delete=True) as output:
-                    output.write(rs)
-                    output.flush()
-                    output.seek(0)
-                    response.write(output.read())
+                # html = HTML(string=html_string)
+                # rs = html.write_pdf()
+                # with tempfile.NamedTemporaryFile(delete=True) as output:
+                #     output.write(rs)
+                #     output.flush()
+                #     output.seek(0)
+                #     response.write(output.read())
                 return response
         elif request.GET.get('time') == "weekly":
             now = datetime.today()
@@ -193,15 +191,15 @@ def counter_dashboard(request):
             weekly = Post.objects.filter(date_send__range=[week_ago, now])
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="weekly_report.pdf"'
-            response["Content-Transfer-Encoding"] = 'binary'
+            # response["Content-Transfer-Encoding"] = 'binary'
             html_string = render_to_string('post/report.html', {'posts': weekly})
-            html = HTML(string=html_string)
-            rs = html.write_pdf()
-            with tempfile.NamedTemporaryFile(delete=True) as output:
-                output.write(rs)
-                output.flush()
-                output.seek(0)
-                response.write(output.read())
+            # html = HTML(string=html_string)
+            # rs = html.write_pdf()
+            # with tempfile.NamedTemporaryFile(delete=True) as output:
+            #     output.write(rs)
+            #     output.flush()
+            #     output.seek(0)
+            #     response.write(output.read())
             return response
 
     context = {
