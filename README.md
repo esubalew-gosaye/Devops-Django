@@ -1,2 +1,1 @@
 # Devops-Django
-# Devops-Django
