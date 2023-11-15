@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Open in browser"){
+            steps{
+                script{
+                    sh 'ls'
+                }
+            }
+        }
+        // STAGE PASSED
+        stage('Checkout GitHub') {
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/esubalew-gosaye/Devops-Django.git']])
+            }
+        }
+        // STAGE PASSED
+        stage("Build Docker image"){
+            steps{
+                script{
+                    sh 'docker build -t post_mngt_sys .'
+                }
+            }
+        }
+        /* STAGE PASSED */
+        stage("Push image to DockerHub"){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dokerhubpwd')]) {
+                       sh 'docker login -u mesaye -p ${dokerhubpwd}'   
+                       
+                       sh 'docker tag post_mngt_sys mesaye/post_mngt_sys:push-hub'
+                       
+                       sh 'docker push mesaye/post_mngt_sys:push-hub'
+                    }
+                    
+                }
+            }
+        }
+        
+        stage("Run the Container"){
+            steps{
+                script{
+                    sh 'docker run -dp 4040:8000 post_mngt_sys'
+                }
+            }
+        }
+        
+    }
+}
