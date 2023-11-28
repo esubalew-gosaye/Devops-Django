@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: django-k8s-deployment
+spec:
+  selector:
+    matchLabels:
+      app: django-k8s
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: django-k8s
+    spec:
+      containers:
+        - name: django-cont-k8s
+          image: mesaye/django_post_ci_cd:push-hub
+          ports:
+            - containerPort: 8000
